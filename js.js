@@ -14,18 +14,21 @@ function registrarUsuario(usuarios) {
 
   if (!nombre || nombre.trim() === "") {
     console.log("El nombre no puede estar vacío.");
+    alert("El nombre no puede estar vacío.");
     return usuarios;
   }
 
   const existe = usuarios.find(u => u.nombre === nombre);
   if (existe) {
     console.log("Ese nombre de usuario ya está registrado.");
+    alert("Ese nombre de usuario ya está registrado.");
     return usuarios;
   }
 
   const clave = prompt("Ingresa una clave:");
   if (!clave || clave.trim() === "") {
     console.log("La clave no puede estar vacía.");
+    alert("La clave no puede estar vacía.");
     return usuarios;
   }
 
@@ -34,6 +37,7 @@ function registrarUsuario(usuarios) {
 
   if (isNaN(saldoInicial) || saldoInicial < 0) {
     console.log("El saldo debe ser un número válido y no negativo.");
+    alert("El saldo debe ser un número válido y no negativo.");
     return usuarios;
   }
 
@@ -49,6 +53,7 @@ function registrarUsuario(usuarios) {
   usuarios.push(nuevoUsuario);
   guardarUsuarios(usuarios);
   console.log(`Usuario "${nombre}" registrado con éxito.`);
+  alert(`Usuario "${nombre}" registrado con éxito.`);
 
   return usuarios;
 }
@@ -61,12 +66,13 @@ function iniciarSesion(usuarios) {
 
   if (!usuario) {
     console.log("Ese usuario no existe.");
+    alert("Ese usuario no existe.");
     return null;
   }
 
   if (usuario.bloqueado) {
     console.log("Cuenta bloqueada por 24 horas, comunícate con tu banco.");
-    alert("Usuario Bloquado");
+    alert("Cuenta bloqueada por 24 horas, comunícate con tu banco.");
     return null;
   }
 
@@ -87,6 +93,7 @@ function iniciarSesion(usuarios) {
   if (autenticado) {
     usuario.intentosFallidos = 0;
     console.log(`Bienvenido, ${usuario.nombre}.`);
+    alert(`Bienvenido, ${usuario.nombre}.`);
     return usuario;
   } else {
     usuario.bloqueado = true;
@@ -115,11 +122,13 @@ function retirar(usuario, usuarios) {
 
   if (isNaN(monto) || monto <= 0) {
     console.log("El monto debe ser un número positivo.");
+    alert("El monto debe ser un número positivo.");
     return;
   }
 
   if (monto > usuario.saldo) {
     console.log("Fondos insuficientes. Tu saldo actual es: " + usuario.saldo);
+    alert("Fondos insuficientes. Tu saldo actual es: " + usuario.saldo);
     return;
   }
 
@@ -127,6 +136,7 @@ function retirar(usuario, usuarios) {
   registrarMovimiento(usuario, "Retiro", monto);
   guardarUsuarios(usuarios);
   console.log("Retiro exitoso. Nuevo saldo: " + usuario.saldo);
+  alert("Retiro exitoso. Nuevo saldo: " + usuario.saldo);
 }
 
 function consignar(usuario, usuarios) {
@@ -135,6 +145,7 @@ function consignar(usuario, usuarios) {
 
   if (isNaN(monto) || monto <= 0) {
     console.log("El monto debe ser un número positivo.");
+    alert("El monto debe ser un número positivo.");
     return;
   }
 
@@ -142,15 +153,18 @@ function consignar(usuario, usuarios) {
   registrarMovimiento(usuario, "Consignación", monto);
   guardarUsuarios(usuarios);
   console.log("Consignación exitosa. Nuevo saldo: " + usuario.saldo);
+  alert("Consignación exitosa. Nuevo saldo: " + usuario.saldo);
 }
 
 function consultarSaldo(usuario) {
   console.log(`Tu saldo actual es: ${usuario.saldo}`);
+  alert(`Tu saldo actual es: ${usuario.saldo}`);
 }
 
-function consultarMovimientos(usuario) {
+/*function consultarMovimientos(usuario) {
   if (usuario.movimientos.length === 0) {
     console.log("Aún no tienes movimientos registrados.");
+    alert("Aún no tienes movimientos registrados.");
     return;
   }
 
@@ -159,6 +173,26 @@ function consultarMovimientos(usuario) {
     const m = usuario.movimientos[i];
     console.log(`${m.fecha} | ${m.concepto} | Valor: ${m.valor} | Saldo: ${m.saldo}`);
   }
+}*/
+
+function consultarMovimientos(usuario) {
+  if (usuario.movimientos.length === 0) {
+    console.log("Aún no tienes movimientos registrados.");
+    alert("Aún no tienes movimientos registrados.");
+    return;
+  }
+
+  let historial = "=== Historial de Movimientos ===\n\n";
+
+  for (let i = 0; i < usuario.movimientos.length; i++) {
+    const m = usuario.movimientos[i];
+
+    historial +=
+      `${m.fecha} | ${m.concepto} | Valor: ${m.valor} | Saldo: ${m.saldo}\n`;
+  }
+
+  console.log(historial);
+  alert(historial);
 }
 
 /* -------------------- MENÚ DE TRANSACCIONES -------------------- */
@@ -184,9 +218,11 @@ function menuTransacciones(usuario, usuarios) {
         break;
       case "5":
         console.log(`Hasta pronto, ${usuario.nombre}.`);
-        return; // regresa al menú principal
+        alert(`Hasta pronto, ${usuario.nombre}.`);
+        return;
       default:
         console.log("Opción inválida, intenta de nuevo.");
+        alert("Opción inválida, intenta de nuevo.");
     }
   }
 }
@@ -211,9 +247,11 @@ function menuPrincipal() {
         break;
       case "3":
         console.log("Gracias por usar El Cajero.");
+        alert("Gracias por usar El Cajero.");
         return;
       default:
         console.log("Opción inválida, intenta de nuevo.");
+        alert("Opción inválida, intenta de nuevo.");
     }
   }
 }
